@@ -1,9 +1,9 @@
 // BIO Section
 var bio = {
 	"name": "Alexander Erfurt",
-	"role": " --- Hobby Web Developer & Product Manager",
+	"role": " --- Hobby Web Developer & Soon-to-be Product Manager",
 	"contacts": 	{
-		"mobile": "+353-83-450-9703",
+		"mobile": "+353-83-XXX-XXXX",
 		"email": "erfurtalex@gmail.com",
 		"github": "alexerfurt",
 		"twitter": "@alex_erfurt",
