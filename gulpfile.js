@@ -1,28 +1,30 @@
-var gulp = require('gulp'),
+var gulp = require('gulp'), 
+	plumber = require('gulp-plumber'),
 	critical = require('critical'),
 	uglify = require('gulp-uglify'),
-	rename = require('gulp-rename');
-	//minifyCSS = require('gulp-minify-css');
+	rename = require('gulp-rename'),
+	cssnano = require('gulp-cssnano');
 
-gulp.task('default', ['scripts','styles']);
+// Gulp plumber error handler
+var onError = function(err) {
+	console.log(err);
+}
 
-gulp.task('copystyles', function(){
-	return gulp.src(['css/style.css'])
-		.pipe(rename({
-			basename: "site"
-		}));
-		.pipe(gulp_dest('css'));
+gulp.task('default', ['scripts', 'styles']);
+
+gulp.task('scripts', function(){
+	//Uglify and rename js files
+	gulp.src('js/*.js')
+		.pipe(uglify())
+	.pipe(rename('app.min.js'))
+	.pipe(gulp.dest('dist/js/'));
 });
 
-gulp.task('critical', ['build', 'copystyles'], function(){
-	critical.generateInline({
-	        base: '/',
-	        src: 'index.html',
-	        styleTarget: 'css/style.css',
-	        htmlTarget: 'index.html',
-	        width: 320,
-	        height: 480,
-	        minify: true
-	    });
+gulp.task('styles', function(){
+	//Minify CSS with cssnano
+		gulp.src('./css/style.css')
+			.pipe(cssnano())
+		.pipe(rename('cssmin.css'))
+			.pipe(gulp.dest('./dist/css'));	
 });
 
