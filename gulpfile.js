@@ -2,6 +2,7 @@ var gulp = require('gulp'),
 	concat = require('gulp-concat'),
 	uglify = require('gulp-uglify'),
 	rename = require('gulp-rename'),
+	inlineCSS = require('gulp-inline-css'),
 	sass = require('gulp-sass'),
 	imageop = require('gulp-image-optimization'),
 	htmlmin = require('gulp-htmlmin'),
@@ -12,10 +13,14 @@ var gulp = require('gulp'),
 
 	// Compiles scss files and outputs them renamed to dist/css/*.css
 gulp.task('styles', function(){
-	return gulp.src('src/css/style.css')
-		.pipe(sass())
-		.pipe(cssnano())
-		.pipe(gulp.dest('./dist/css/'))
+	return gulp.src('./src/index.html')
+    	.pipe(inlineCSS({
+        	applyStyleTags: true,
+        	applyLinkTags: true,
+        	removeStyleTags: true,
+        	removeLinkTags: true
+    	}))
+		.pipe(gulp.dest('./dist/'))
 		.pipe(notify({ message: 'Styles task complete' }));	
 });
 
@@ -28,16 +33,16 @@ gulp.task('jshint', function() {
 });
 
 	//Minify JS files
-gulp.task('scripts', function(){
-	return gulp.src('src/js/perfmatters.js')
+gulp.task('scripts', ['jshint'], function(){
+	return gulp.src('./src/js/perfmatters.js')
 		.pipe(uglify())
 		.pipe(gulp.dest('./dist/js/'))
 		.pipe(notify({ message: 'Scripts task complete' }));	
 });
 
 	// Minifies the index.html file and pipe it to dist/*.html
-gulp.task('html', function() {
-    return gulp.src('src/index.html')
+gulp.task('html', ['styles'], function() {
+    return gulp.src('./dist/index.html')
         .pipe(htmlmin({collapseWhitespace: true}))
         .pipe(gulp.dest('./dist/'))
 		.pipe(notify({ message: 'HTML task complete' }));	
@@ -78,4 +83,4 @@ gulp.task('images', function() {
 		 .pipe(notify({ message: 'Image task complete' }));
 });
 
-gulp.task('default', ['styles','jshint','scripts','html','imagesProfile','images']);
+gulp.task('default', ['html','scripts','imagesProfile','images']);

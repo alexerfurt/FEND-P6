@@ -10,22 +10,6 @@
     <link href="css/style.css" rel="stylesheet">
 	<!-- Adding media info so that print.css doesn't need to be loaded if it is not the print view-->
     <link href="css/print.css" rel="stylesheet" media="print">
-
-    <!-- Hmm, what is the impact of web fonts on speed? Measure it... 
-		Impact is high since the external fonts needs to be downloaded and thus is render blocking. The following async loaded script should help to improve loading speed.
-		All other script parts will be put on async as well -->
-	<script async>
-		WebFontConfig = {
-			google: {
-				families: ['Open Sans:400,700']
-				}
-			};
-		(function(d) {
-			var wf = d.createElement('script'), s = d.scripts[0];
-			wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js';
-			s.parentNode.insertBefore(wf, s);
-		})(document);
-	</script>
   	<script async>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -78,4 +62,15 @@
       <p>&copy; Web Performance 2014 <span id="crp-stats"></span></p>
     </footer>
   </body>
+  	<!-- Hmm, what is the impact of web fonts on speed? Measure it... 
+	Impact is high since the external fonts needs to be downloaded and thus is render blocking. The following async loaded script should help to improve loading speed.
+	All other script parts will be put on async as well -->
+	<script async>
+		WebFontConfig = {google: {families: ['Open Sans:400,700']}};
+	(function(d) {
+		var wf = d.createElement('script'), s = d.scripts[0];
+		wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js';
+		s.parentNode.insertBefore(wf, s);
+	})(document);
+	</script>
 </html>
