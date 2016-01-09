@@ -12,24 +12,21 @@ var gulp = require('gulp'),
 gulp.task('styles', function(){
 	return gulp.src('src/css/style.css')
 		.pipe(sass())
-		.pipe(rename({suffix: '.min'}))
 		.pipe(gulp.dest('./dist/css/'))
 		.pipe(notify({ message: 'Styles task complete' }));	
 });
 
 	//Hinting js files to make sure it conforms to appropriate coding guidelines
 gulp.task('jshint', function() {
-    return gulp.src('./src/js/*.js')
+    return gulp.src('./src/js/perfmatters.js')
         .pipe(jshint())
     	.pipe(jshint.reporter('default'))
     	.pipe(notify({ message: 'JS Hinting task complete' }));
 });
 
-	//Concatenate, minify and rename JS files
+	//Minify JS files
 gulp.task('scripts', function(){
-	return gulp.src('src/js/*.js')
-		.pipe(concat('all.js'))
-		.pipe(rename({suffix: '.min'}))
+	return gulp.src('src/js/perfmatters.js')
 		.pipe(uglify())
 		.pipe(gulp.dest('./dist/js/'))
 		.pipe(notify({ message: 'Scripts task complete' }));	
@@ -43,16 +40,26 @@ gulp.task('html', function() {
 		.pipe(notify({ message: 'HTML task complete' }));	
 });
 
-	// Optimizes sizes of our image files and outputs them to dist/image/*
-gulp.task('images', function() {
-    return gulp.src('./src/img/**/*')
+	// Optimizes sizes of my image files and outputs them to dist folders
+gulp.task('imagesProfile', function() {
+    return gulp.src('./src/img/profilepic.jpg')
          .pipe(imageop({
              optimizationLevel: 5,
         	 progressive: true,
         	 interlaced: true
          }))
-         .pipe(gulp.dest('./dist/img/'))
+         .pipe(gulp.dest('./dist/img/'));
+});		 
+		 
+ gulp.task('images', function() {
+	return gulp.src('./src/views/images/pizzeria.jpg')
+         .pipe(imageop({
+             optimizationLevel: 5,
+        	 progressive: true,
+        	 interlaced: true
+         }))
+         .pipe(gulp.dest('./dist/views/images/'))
 		 .pipe(notify({ message: 'Image task complete' }));
 });
 
-gulp.task('default', ['styles','jshint','scripts','html','images']);
+gulp.task('default', ['styles','jshint','scripts','html','imagesProfile','images']);
