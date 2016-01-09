@@ -6,12 +6,15 @@ var gulp = require('gulp'),
 	imageop = require('gulp-image-optimization'),
 	htmlmin = require('gulp-htmlmin'),
 	jshint = require('gulp-jshint'),
+	critical = require('critical'),
+	cssnano = require('gulp-cssnano'),
 	notify= require('gulp-notify');
 
 	// Compiles scss files and outputs them renamed to dist/css/*.css
 gulp.task('styles', function(){
 	return gulp.src('src/css/style.css')
 		.pipe(sass())
+		.pipe(cssnano())
 		.pipe(gulp.dest('./dist/css/'))
 		.pipe(notify({ message: 'Styles task complete' }));	
 });
@@ -39,8 +42,20 @@ gulp.task('html', function() {
         .pipe(gulp.dest('./dist/'))
 		.pipe(notify({ message: 'HTML task complete' }));	
 });
+	// Generate & Inline Critical-path CSS 
+gulp.task('critical', function () {
+    critical.generate({
+        inline: true,
+        base: 'dist/',
+        src: 'index.html',
+        dest: 'dist/index-critical.html',
+        minify: true,
+        width: 320,
+        height: 480
+	});
+});
 
-	// Optimizes sizes of my image files and outputs them to dist folders
+	// Optimizes size of my image file and outputs them to dist folders
 gulp.task('imagesProfile', function() {
     return gulp.src('./src/img/profilepic.jpg')
          .pipe(imageop({
@@ -50,8 +65,9 @@ gulp.task('imagesProfile', function() {
          }))
          .pipe(gulp.dest('./dist/img/'));
 });		 
-		 
- gulp.task('images', function() {
+
+	 // Optimizes size of my image files in the views folder and outputs them to dist/views folder
+gulp.task('images', function() {
 	return gulp.src('./src/views/images/pizzeria.jpg')
          .pipe(imageop({
              optimizationLevel: 5,
