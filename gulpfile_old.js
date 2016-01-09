@@ -2,7 +2,16 @@ var gulp = require('gulp'),
 	critical = require('critical'),
 	uglify = require('gulp-uglify'),
 	rename = require('gulp-rename');
+		plumber = require('gulp-plumber'),
+		cssnano = require('gulp-cssnano'),
 	//minifyCSS = require('gulp-minify-css');
+
+	
+		// Gulp plumber error handler
+	var onError = function(err) {
+		console.log(err);
+	}
+
 
 gulp.task('default', ['scripts','styles']);
 
@@ -55,15 +64,15 @@ gulp.task('critical', function(){
         .pipe(gulp.dest('index-critical.html'));
 });
 
-gulp.task('critical', function(){
-	critical.generate({
-			inline: true,
-	        base: '/',
-	        src: 'index.html',
-	        css: 'css/style.css',
-	        dest: 'dist/index-critical.html',
-	        width: 360,
-	        height: 540,
-	        minify: true,
-	    });
+gulp.task('critical', function () {
+    critical.generate({
+        inline: true,
+        base: 'dist/',
+        src: 'index.html',
+	    css: 'css/style.css',
+        dest: 'index-critical.html',
+        width: 320,
+        height: 480,
+        minify: true
+    });
 });
