@@ -49,3 +49,21 @@ gulp.task('critical', ['build', 'copystyles'], function(){
 	    });
 });
 
+gulp.task('critical', function(){
+    return gulp.src('index.html')
+        .pipe(critical.generate({base: 'dist/', inline: true, css: 'css/style.css', minify: true}))
+        .pipe(gulp.dest('index-critical.html'));
+});
+
+gulp.task('critical', function(){
+	critical.generate({
+			inline: true,
+	        base: '/',
+	        src: 'index.html',
+	        css: 'css/style.css',
+	        dest: 'dist/index-critical.html',
+	        width: 360,
+	        height: 540,
+	        minify: true,
+	    });
+});
