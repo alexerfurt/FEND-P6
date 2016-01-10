@@ -28,6 +28,9 @@ gulp.task('styles', function(){
 		.pipe(gulp.dest('minCSS'));	
 });
 
+	return gulp.src('src/css/style.css')
+		.pipe(sass())
+		.pipe(cssnano())
 
 
 

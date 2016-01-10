@@ -497,16 +497,35 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 // The following code for sliding background pizzas was pulled from Ilya's demo found at:
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
-// Moves the sliding background pizzas based on scroll position
-function updatePositions() {
-  frame++;
-  window.performance.mark("mark_start_frame");
+// Optimized function: moves the sliding background pizzas based on scroll position
+  // Optimizations made: replacing 'querySelectorAll('.mover') through 'getElementsByClassName('mover') since functions like querySelector are considered as not as efficient as JS DOM-querying functions,
+  // Also items variable has been taken out of the function since the array supposed to be the same every time updatePositions function run and therefore doesn't to be re-created & re-calculated everytime.
+  // Same applies to the lookup items.length that will be saved into variable itemsLength, since its usually faster to look up variable x than x.y. And again, same applies for document.body.scrollTop within the for-loop, to avoid a lookup in the form x.y.z.
+  // Instead of items[i].style.left = items[i].basicLeft, the transform/ translate option will be used due to efficiency.
+  
+var items = document.getElementsByClassName('mover');
+var itemsLength = items.length;
 
-  var items = document.querySelectorAll('.mover');
-  for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
-  }
+function updatePositions() {
+    frame++;
+    window.performance.mark("mark_start_frame");
+	var cachedTop = document.body.scrollTop;
+	var xMovement = [];
+	
+	// Phase values are reapting over and over again. There are only 5 unique ones, so an own for-loop will generate those 5 phase values, calculate the corresponding x-translation and put it into an array
+    for (var i = 0; i < 5; i++) {
+      var phase = Math.sin((cachedTop / 1250) + (i % 5));
+	  xMovement[i] = 100 * phase + 'px';
+    }
+	// Next for-loop will fill in the unique phase values from the array xMovement until itemsLength is reached
+	var a = 0;
+    for (var i = 0; i < itemsLength; i++) {		
+	  items[i].style.transform = translateX(xMovement[a]);
+	  a++;
+	  If (a < 5) {
+		  a = 0;
+	  };	
+    }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
   // Super easy to create custom metrics.
