@@ -506,25 +506,32 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 
 
 function updatePositions() {
+    animating = false;
     frame++;
     window.performance.mark("mark_start_frame");
-	
-	var items = document.getElementsByClassName('mover');
-	var itemsLength = items.length;
-	var cachedTop = document.body.scrollTop;
-	var xMovementArray = [];
-	var i;
-	
-	// Phase values are reapting over and over again. There are only 5 unique ones, so an own for-loop will generate those 5 phase values, calculate the corresponding x-translation and put it into an array
-    for (i = 0; i < 5; i++) {
-		xMovementArray.push(100 * (Math.sin((cachedTop / 1250) + i)) + 'px');
-    }
-	// Next for-loop will fill in the unique phase values from the array xMovement until itemsLength is reached
-    for (i = 0; i < itemsLength; i++) {		
-	  items[i].style.transform = translateX(xMovementArray[i % 5]);
+
+    // var items = document.querySelectorAll('.mover');
+    // console.log('qSA', items);
+
+    var items = document.getElementsByClassName('mover');
+    // console.log("gEBC", items)
+    var top = document.body.scrollTop/ 1250;
+    var numOfPizzas = items.length;
+
+    var constArray = [];
+    for (var i=0; i<5; i++){
+      constArray[i] = Math.sin(top + i) * 100; //correspond to 100 * phase in previoius code
     }
 
-  // User Timing API to the rescue again. Seriously, it's worth learning.
+    for (var i = 0; i < numOfPizzas ; i++) {
+      // var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
+      // items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+
+      var moveX =  items[i].basicLeft + constArray[(i % 5)] -1250;
+      items[i].style.transform = 'translate3d(' + moveX + 'px, 0, 0)'
+      // items[i].style.transform = 'translateX( ' + moveX + 'px)'
+    }
+      // User Timing API to the rescue again. Seriously, it's worth learning.
   // Super easy to create custom metrics.
   window.performance.mark("mark_end_frame");
   window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
