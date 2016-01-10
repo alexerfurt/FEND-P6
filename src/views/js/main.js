@@ -503,28 +503,25 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
   // Same applies to the lookup items.length that will be saved into variable itemsLength, since its usually faster to look up variable x than x.y. And again, same applies for document.body.scrollTop within the for-loop, to avoid a lookup in the form x.y.z.
   // Instead of items[i].style.left = items[i].basicLeft, the transform/ translate option will be used due to efficiency.
   
-var items = document.getElementsByClassName('mover');
-var itemsLength = items.length;
+
 
 function updatePositions() {
     frame++;
     window.performance.mark("mark_start_frame");
+	
+	var items = document.getElementsByClassName('mover');
+	var itemsLength = items.length;
 	var cachedTop = document.body.scrollTop;
-	var xMovement = [];
+	var xMovementArray = [];
+	var i;
 	
 	// Phase values are reapting over and over again. There are only 5 unique ones, so an own for-loop will generate those 5 phase values, calculate the corresponding x-translation and put it into an array
-    for (var i = 0; i < 5; i++) {
-      var phase = Math.sin((cachedTop / 1250) + (i % 5));
-	  xMovement[i] = 100 * phase + 'px';
+    for (i = 0; i < 5; i++) {
+		xMovementArray.push(100 * (Math.sin((cachedTop / 1250) + i)) + 'px');
     }
 	// Next for-loop will fill in the unique phase values from the array xMovement until itemsLength is reached
-	var a = 0;
-    for (var i = 0; i < itemsLength; i++) {		
-	  items[i].style.transform = translateX(xMovement[a]);
-	  a++;
-	  If (a < 5) {
-		  a = 0;
-	  };	
+    for (i = 0; i < itemsLength; i++) {		
+	  items[i].style.transform = translateX(xMovementArray[i % 5]);
     }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
