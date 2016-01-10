@@ -448,12 +448,17 @@ var resizePizzas = function(size) {
     return dx;
   }
 
-  // Iterates through pizza elements on the page and changes their widths
+  // Iterates through pizza elements on the page and changes their widths. 
+  // UPDATE: Optimized by replacing 'querySelectorAll' with 'getElementsByClassName' and putting into the variable pizzaItems. Also all variables that have the same value as soon as the functions starts (pizzaItems, numPizzas, dx, newwidth) were taken out of the for-loop in order to prevent unnecessary re-calculations and thus increase computational efficiency (<5ms time to resize pizza)
   function changePizzaSizes(size) {
-    for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
-      var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
-      var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
-      document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
+	var i;
+	var pizzaItems = document.getElementsByClassName("randomPizzaContainer");
+	var numPizzas = pizzaItems.length;
+	var dx = determineDx(pizzaItems[0], size);
+    var newwidth = (pizzaItems[0].offsetWidth + dx) + 'px';
+	  	  
+    for (i = 0; i < numPizzas; i++) {
+      	pizzaItems[i].style.width = newwidth;
     }
   }
 
@@ -468,8 +473,8 @@ var resizePizzas = function(size) {
 
 window.performance.mark("mark_start_generating"); // collect timing data
 
-// This for-loop actually creates and appends all of the pizzas when the page loads
-for (var i = 2; i < 100; i++) {
+// This for-loop actually creates and appends all of the pizzas when the page loads. UPDATE: reduced from 100 to 50 since not that many needed when page loads.
+for (var i = 2; i < 50; i++) {
   var pizzasDiv = document.getElementById("randomPizzas");
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
@@ -501,38 +506,27 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
   // Optimizations made: replacing 'querySelectorAll('.mover') through 'getElementsByClassName('mover') since functions like querySelector are considered as not as efficient as JS DOM-querying functions,
   // Also items variable has been taken out of the function since the array supposed to be the same every time updatePositions function run and therefore doesn't to be re-created & re-calculated everytime.
   // Same applies to the lookup items.length that will be saved into variable itemsLength, since its usually faster to look up variable x than x.y. And again, same applies for document.body.scrollTop within the for-loop, to avoid a lookup in the form x.y.z.
-  // Instead of items[i].style.left = items[i].basicLeft, the transform/ translate option will be used due to efficiency.
-  
-
-
 function updatePositions() {
-    animating = false;
     frame++;
     window.performance.mark("mark_start_frame");
-
-    // var items = document.querySelectorAll('.mover');
-    // console.log('qSA', items);
-
-    var items = document.getElementsByClassName('mover');
-    // console.log("gEBC", items)
-    var top = document.body.scrollTop/ 1250;
-    var numOfPizzas = items.length;
-
-    var constArray = [];
-    for (var i=0; i<5; i++){
-      constArray[i] = Math.sin(top + i) * 100; //correspond to 100 * phase in previoius code
+	
+	var items = document.getElementsByClassName('mover');
+	var numPizzas = items.length;
+	var cachedTop = document.body.scrollTop / 1250;
+	var phaseArray = [];
+	var i;
+	
+	// Phase values are reapting over and over again, since there are only 5 unique ones (modulo % operator), so an own for-loop will generate those 5 phase values, calculate the corresponding x-translation and put it into an array
+    for (i = 0; i < 5; i++) {
+		phaseArray.push(Math.sin(cachedTop + i)*100);
     }
-
-    for (var i = 0; i < numOfPizzas ; i++) {
-      // var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
-      // items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
-
-      var moveX =  items[i].basicLeft + constArray[(i % 5)] -1250;
-      items[i].style.transform = 'translate3d(' + moveX + 'px, 0, 0)'
-      // items[i].style.transform = 'translateX( ' + moveX + 'px)'
+	// Next for-loop will fill in the unique phase values from phaseArray into an overall movement variable until itemsLength is reached. Instead of items[i].style.left the transform & translate3d option will be used due to efficiency and to reduce paint time overall.
+    for (i = 0; i < numPizzas; i++) {
+		var moveX = items[i].basicLeft + phaseArray[(i % 5)] - 1250;
+	  	items[i].style.transform = 'translate3d(' + moveX + 'px, 0, 0)';
     }
-      // User Timing API to the rescue again. Seriously, it's worth learning.
-  // Super easy to create custom metrics.
+	// User Timing API to the rescue again. Seriously, it's worth learning.
+  	// Super easy to create custom metrics.
   window.performance.mark("mark_end_frame");
   window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
   if (frame % 10 === 0) {
@@ -544,11 +538,11 @@ function updatePositions() {
 // runs updatePositions on scroll
 window.addEventListener('scroll', updatePositions);
 
-// Generates the sliding pizzas when the page loads.
+// Generates the sliding pizzas when the page loads. Reduced from 200 to a total of 40 pizzas calculated when scrolling
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  for (var i = 0; i < 200; i++) {
+  for (var i = 0; i < 50; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
