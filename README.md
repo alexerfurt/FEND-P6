@@ -1,73 +1,66 @@
-## Website Performance Optimization portfolio project
+## FEND Project 4 - Website Performance Optimization
 
-Your challenge, if you wish to accept it (and we sure hope you will), is to optimize this online portfolio for speed! In particular, optimize the critical rendering path and make this page render as quickly as possible by applying the techniques you've picked up in the [Critical Rendering Path course](https://www.udacity.com/course/ud884).
-
-To get started, check out the repository, inspect the code,
+Check out on: http://alexerfurt.github.io/FEND4
 
 ### Getting started
 
+NPM has been used as a package manager and Gulp for build automation. The following gulp-plugins will be needed to reconstruct files within the 'dist' directory out of the production files within the 'src' folder:
+
+* gulp-uglify
+* gulp-inline-css
+* gulp-image-optimization
+* gulp-htmlmin
+* gulp-jshint
+* gulp-cssnano
+* gulp-notify
+
+See also package.json file for all dependencies. All of them can be installed using the "npm install --save-dev <GULP_PLUGIN>" command via terminal (MAC) or equivalent consoles.
+
 ####Part 1: Optimize PageSpeed Insights score for index.html
 
-Some useful tips to help you get started:
+1. Changes made for images (in /img and views/images)
 
-1. Check out the repository
-1. To inspect the site on your phone, you can run a local server
+*profilepic.jpg is compressed
+*pizzeria.jpg is resized and compressed.
 
-  ```bash
-  $> cd /path/to/your-project-folder
-  $> python -m SimpleHTTPServer 8080
-  ```
+2. Changes made in index.html
 
-1. Open a browser and visit localhost:8080
-1. Download and install [ngrok](https://ngrok.com/) to make your local server accessible remotely.
+*media query "print" for print.css
+*loaded google analytics.js & perfmatters.js scripts asynchronously
+*loaded google font asynchronously with web font loader in footer
 
-  ``` bash
-  $> cd /path/to/your-project-folder
-  $> ngrok 8080
-  ```
+3. Build automation - piping files from 'src' to corresponding 'dist'-folder
 
-1. Copy the public URL ngrok gives you and try running it through PageSpeed Insights! Optional: [More on integrating ngrok, Grunt and PageSpeed.](http://www.jamescryer.com/2014/06/12/grunt-pagespeed-and-ngrok-locally-testing/)
-
-Profile, optimize, measure... and then lather, rinse, and repeat. Good luck!
+*inlined styles into index.html
+*further compression of profilepic.jpg (gulp-image-optimization plugin)
+*JS linting and minification (uglify)
+*HTML minification
 
 ####Part 2: Optimize Frames per Second in pizza.html
 
-To optimize views/pizza.html, you will need to modify views/js/main.js until your frames per second rate is 60 fps or higher. You will find instructive comments in main.js. 
+1. Optimized the 'uploadPosition' function:
 
-You might find the FPS Counter/HUD Display useful in Chrome developer tools described here: [Chrome Dev Tools tips-and-tricks](https://developer.chrome.com/devtools/docs/tips-and-tricks).
+*Replaced 'querySelectorAll('.mover') through 'getElementsByClassName('mover') since functions like querySelector are considered as not as efficient as JS DOM-querying functions
+*Items variable has been taken out of the function since the array supposed to be the same every time updatePositions function runs and therefore doesn't need to be re-created & re-calculated everytime.
+*Same applies to the lookup items.length that is saved into variable numPizzas, since its usually faster to look up variable x than x.y. 
+*Same applies for document.body.scrollTop within the for-loop, to avoid a lookup in the form x.y.z. Its pre-calculated value (divided by 1250) is saved in the variable 'cachedTop' outside the for-loop.
+*Since there are only 5 unique phase values allowed (modulo % operator), an own for-loop generates those 5 ones, calculates the corresponding x-translation and puts it into an array
+*Initial for-loop fills in the unique phase values from phaseArray into an overall movement variable until itemsLength is reached. 
+*Instead of items[i].style.left the transform & translate3d option is used due to efficiency and to reduce paint time overall.
 
-### Optimization Tips and Tricks
-* [Optimizing Performance](https://developers.google.com/web/fundamentals/performance/ "web performance")
-* [Analyzing the Critical Rendering Path](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/analyzing-crp.html "analyzing crp")
-* [Optimizing the Critical Rendering Path](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/optimizing-critical-rendering-path.html "optimize the crp!")
-* [Avoiding Rendering Blocking CSS](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/render-blocking-css.html "render blocking css")
-* [Optimizing JavaScript](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/adding-interactivity-with-javascript.html "javascript")
-* [Measuring with Navigation Timing](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/measure-crp.html "nav timing api"). We didn't cover the Navigation Timing API in the first two lessons but it's an incredibly useful tool for automated page profiling. I highly recommend reading.
-* <a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/eliminate-downloads.html">The fewer the downloads, the better</a>
-* <a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/optimize-encoding-and-transfer.html">Reduce the size of text</a>
-* <a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/image-optimization.html">Optimize images</a>
-* <a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching.html">HTTP caching</a>
+2. Optimized number of sliding pizzas generated when the page loads and the for-loop that actually creates and appends all of the pizzas when the page loads. 
 
-### Customization with Bootstrap
-The portfolio was built on Twitter's <a href="http://getbootstrap.com/">Bootstrap</a> framework. All custom styles are in `dist/css/portfolio.css` in the portfolio repo.
+*Reduced number of sliding pizzas from 200 to a total of 50 pizzas calculated when scrolling.
+*Reduced number of pizzas in page load from 100 to 50 since. For both, new values appear to be enough when page loads.
 
-* <a href="http://getbootstrap.com/css/">Bootstrap's CSS Classes</a>
-* <a href="http://getbootstrap.com/components/">Bootstrap's Components</a>
+3. Optimized function changePizzaSizes(size)
 
-### Sample Portfolios
+*Optimized by replacing 'querySelectorAll' with 'getElementsByClassName' and put the whole selector into the variable pizzaItems.
+*All variables that have the same value as soon as the functions starts (pizzaItems, numPizzas, dx, newwidth) were taken out of the for-loop in order to prevent unnecessary re-creation & re-calculations and thus to increase computational efficiency (<5ms time to resize pizza)
 
-Feeling uninspired by the portfolio? Here's a list of cool portfolios I found after a few minutes of Googling.
+4. Build automation - piping files from 'src' to corresponding 'dist'-folder
 
-* <a href="http://www.reddit.com/r/webdev/comments/280qkr/would_anybody_like_to_post_their_portfolio_site/">A great discussion about portfolios on reddit</a>
-* <a href="http://ianlunn.co.uk/">http://ianlunn.co.uk/</a>
-* <a href="http://www.adhamdannaway.com/portfolio">http://www.adhamdannaway.com/portfolio</a>
-* <a href="http://www.timboelaars.nl/">http://www.timboelaars.nl/</a>
-* <a href="http://futoryan.prosite.com/">http://futoryan.prosite.com/</a>
-* <a href="http://playonpixels.prosite.com/21591/projects">http://playonpixels.prosite.com/21591/projects</a>
-* <a href="http://colintrenter.prosite.com/">http://colintrenter.prosite.com/</a>
-* <a href="http://calebmorris.prosite.com/">http://calebmorris.prosite.com/</a>
-* <a href="http://www.cullywright.com/">http://www.cullywright.com/</a>
-* <a href="http://yourjustlucky.com/">http://yourjustlucky.com/</a>
-* <a href="http://nicoledominguez.com/portfolio/">http://nicoledominguez.com/portfolio/</a>
-* <a href="http://www.roxannecook.com/">http://www.roxannecook.com/</a>
-* <a href="http://www.84colors.com/portfolio.html">http://www.84colors.com/portfolio.html</a>
+*further compression of pizzeria.jpg
+*JS linting and minification (uglify)
+*CSS and HTML minification
+   

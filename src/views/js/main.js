@@ -505,7 +505,7 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 // Optimized function: moves the sliding background pizzas based on scroll position
   // Optimizations made: replacing 'querySelectorAll('.mover') through 'getElementsByClassName('mover') since functions like querySelector are considered as not as efficient as JS DOM-querying functions,
   // Also items variable has been taken out of the function since the array supposed to be the same every time updatePositions function run and therefore doesn't to be re-created & re-calculated everytime.
-  // Same applies to the lookup items.length that will be saved into variable itemsLength, since its usually faster to look up variable x than x.y. And again, same applies for document.body.scrollTop within the for-loop, to avoid a lookup in the form x.y.z.
+  // Same applies to the lookup items.length that will be saved into variable numPizzas, since its usually faster to look up variable x than x.y. And again, same applies for document.body.scrollTop within the for-loop, to avoid a lookup in the form x.y.z.
 function updatePositions() {
     frame++;
     window.performance.mark("mark_start_frame");
@@ -538,7 +538,7 @@ function updatePositions() {
 // runs updatePositions on scroll
 window.addEventListener('scroll', updatePositions);
 
-// Generates the sliding pizzas when the page loads. Reduced from 200 to a total of 40 pizzas calculated when scrolling
+// Generates the sliding pizzas when the page loads. Reduced from 200 to a total of 50 pizzas calculated when scrolling
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
