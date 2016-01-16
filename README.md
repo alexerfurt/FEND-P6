@@ -1,6 +1,6 @@
 ## FEND Project 4 - Website Performance Optimization
 
-Check out on: http://alexerfurt.github.io/
+Check out on: http://alexerfurt.github.io/dist/index.html
 
 ### Getting started
 
