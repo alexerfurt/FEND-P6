@@ -21,12 +21,15 @@ See also package.json file for all dependencies. All of them can be installed us
 1. Changes made for images (in /img and views/images)
 
 *profilepic.jpg is compressed
+
 *pizzeria.jpg is resized and compressed.
 
 2. Changes made in index.html
 
 *media query "print" for print.css
+
 *loaded google analytics.js & perfmatters.js scripts asynchronously
+
 *loaded google font asynchronously with web font loader in footer
 
 3. Build automation - piping files from 'src' to corresponding 'dist'-folder
