@@ -18,13 +18,13 @@ See also package.json file for all dependencies. All of them can be installed us
 
 ####Part 1: Optimize PageSpeed Insights score for index.html
 
-1.Changes made for images (in /img and views/images)
+//1.Changes made for images (in /img and views/images)
 
 *profilepic.jpg is compressed
 
 *pizzeria.jpg is resized and compressed.
 
-2.Changes made in index.html
+//2.Changes made in index.html
 
 *media query "print" for print.css
 
@@ -32,7 +32,7 @@ See also package.json file for all dependencies. All of them can be installed us
 
 *loaded google font asynchronously with web font loader in footer
 
-3.Build automation - piping files from 'src' to corresponding 'dist'-folder
+//3.Build automation - piping files from 'src' to corresponding 'dist'-folder
 
 *inlined styles into index.html
 
@@ -44,7 +44,7 @@ See also package.json file for all dependencies. All of them can be installed us
 
 ####Part 2: Optimize Frames per Second in pizza.html
 
-1.Optimized the 'uploadPosition' function:
+//1.Optimized the 'uploadPosition' function:
 
 *Replaced 'querySelectorAll('.mover') through 'getElementsByClassName('mover') since functions like querySelector are considered as not as efficient as JS DOM-querying functions
 
@@ -60,7 +60,7 @@ See also package.json file for all dependencies. All of them can be installed us
 
 *Instead of items[i].style.left the transform & translate3d option is used due to efficiency and to reduce paint time overall.
 
-/2.Optimized number of sliding pizzas generated when the page loads and the for-loop that actually creates and appends all of the pizzas when the page loads. 
+//2.Optimized number of sliding pizzas generated when the page loads and the for-loop that actually creates and appends all of the pizzas when the page loads. 
 
 *Reduced number of sliding pizzas from 200 to a total of 50 pizzas calculated when scrolling.
 *Reduced number of pizzas in page load from 100 to 50 since. For both, new values appear to be enough when page loads.
@@ -71,7 +71,7 @@ See also package.json file for all dependencies. All of them can be installed us
 
 *All variables that have the same value as soon as the functions starts (pizzaItems, numPizzas, dx, newwidth) were taken out of the for-loop in order to prevent unnecessary re-creation & re-calculations and thus to increase computational efficiency (<5ms time to resize pizza)
 
-4. Build automation - piping files from 'src' to corresponding 'dist'-folder
+//4.Build automation - piping files from 'src' to corresponding 'dist'-folder
 
 *further compression of pizzeria.jpg
 
