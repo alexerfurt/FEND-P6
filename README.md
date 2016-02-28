@@ -69,9 +69,17 @@ See also package.json file for all dependencies. All of them can be installed us
 
 *Optimized by replacing 'querySelectorAll' with 'getElementsByClassName' and put the whole selector into the variable pizzaItems.
 
-*All variables that have the same value as soon as the functions starts (pizzaItems, numPizzas, dx, newwidth) were taken out of the for-loop in order to prevent unnecessary re-creation & re-calculations and thus to increase computational efficiency (<5ms time to resize pizza)
+*Changed queryselector to getElementById call in determineDx-function (returns pizza size difference) due to performance
 
-//4.Build automation - piping files from 'src' to corresponding 'dist'-folder
+*Within the function that generates sliding pizzas when page loads, the querySelector was replaced by getElementById in order to increase performance when using appendCild method. The call was additionaly taken out of the for loop and saved into the movingPizzas variable.
+
+*All variables that have the same value as soon as the functions starts (pizzaItems, pizzaDiv, numPizzas, dx, newwidth, movingPizzas) were taken out of the for-loop in order to prevent unnecessary re-creation, re-calculations or unnecessary DOM calls, and thus to increase computational efficiency (<5ms time to resize pizza)
+
+//4.Optimized CSS
+
+*Increased sites performance with hardware accelerated CSS by simply including GPU trigger like the 'transform: translateZ(0)' declaration as well as adding backface-visibility property with the hidden value (including vendor prefix '-webkit-').
+
+//5.Build automation - piping files from 'src' to corresponding 'dist'-folder
 
 *further compression of pizzeria.jpg
 
